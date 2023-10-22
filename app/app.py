@@ -37,6 +37,16 @@ class Heroes(Resource):
     
 api.add_resource(Heroes,"/heroes")
 
+class HeroById(Resource):
+    def get(self,id):
+        hero=Hero.query.get(id)
+        if hero is not None:
+            return make_response({
+                "error": "Hero not found"
+            },404)
+        
+api.add_resource(HeroById, "/heroes/<int:id>")
+
 
 if __name__ == '__main__':
     app.run(port=5555)
