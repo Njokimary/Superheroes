@@ -80,8 +80,36 @@ class PowerById(Resource):
 
         return make_response(jsonify(power_dict), 200)
 
+    def patch(self, id):
+        power = Power.query.get(id)
+        if not power:
+            return make_response({
+                "error": "Power not found"
+            }, 404)
+        
+        data = request.get_json()
+        power.description = data.get("description")
+        
+        try:
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            return make_response({
+                "errors": [str(e)]
+            }, 400)
+        
+        power_dict = {
+            "id": power.id,
+            "name": power.name,
+            "description": power.description
+        }
+        
+        return make_response(jsonify(power_dict), 200)
     
+
 api.add_resource(PowerById, "/powers/<int:id>")
+
+
 
 
 if __name__ == '__main__':
