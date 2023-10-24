@@ -4,6 +4,11 @@ import enum
 
 db = SQLAlchemy()
 
+class StrengthType(enum.Enum):
+    STRONG = "strong"
+    WEAK = "weak"
+    AVERAGE = "average"
+
 class Hero(db.Model, SerializerMixin):
     __tablename__ = 'heroes'
 
