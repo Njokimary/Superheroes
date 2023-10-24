@@ -1,5 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy_serializer import SerializerMixin
+from sqlalchemy.orm import validates
 import enum
 
 db = SQLAlchemy()
@@ -28,6 +29,12 @@ class Power(db.Model,SerializerMixin):
 
     # Establish a one-to-many relationship from Power to HeroPower
     power_heroes = db.relationship('HeroPower', back_populates='power')
+
+    @validates('description')
+    def validate_description(self, key, value):
+        if len(value) < 20:
+            raise ValueError("Description must be at least 20 characters long.")
+        return value
 
 class HeroPower(db.Model, SerializerMixin):
     __tablename__ = 'heropowers'
